@@ -9,6 +9,7 @@ using namespace std;
 
 bool debugstatus;
 
+//Allows for timestamping debug output
 char* timestamp(){
     time_t rawtime;
     struct tm * timeinfo;
@@ -18,6 +19,8 @@ char* timestamp(){
     strftime (buffer,256,"%b %d %Y %T",timeinfo);
     return buffer;
 }
+
+//Allows for pausing code, so animations are given time to complete
 void delay(int timedur)
 {
     QTime dieTime= QTime::currentTime().addMSecs(timedur);
@@ -27,33 +30,31 @@ void delay(int timedur)
 
 Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
 {
-    //QWidget::setWindowFlags( Qt::X11BypassWindowManagerHint );
-    winstatus=0;
-
     // Declarations    
     openAction = new QAction(tr("&Load"), this);
     saveAction = new QAction(tr("&Save"), this);
     animAction = new QAction(tr("&Animate"), this);
     exitAction = new QAction(tr("E&xit"), this);
     aboutAction = new QAction(tr("A&bout"), this);
-
+    // -Slots
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
     connect(animAction, SIGNAL(triggered()), this, SLOT(anim()));
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
-    // Make a File menu
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(openAction);
-    fileMenu->addAction(saveAction);
+    // -File menu
+    fileMenu = menuBar()->addMenu(tr("&File"));                       //File menu
+    fileMenu->addAction(openAction);                                  //Open item
+    fileMenu->addAction(saveAction);                                  //Save item
     fileMenu->addSeparator();
-    fileMenu->addAction(animAction);
+    fileMenu->addAction(animAction);                                  //Toggle window state
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
-    fileMenu = menuBar()->addMenu(tr("&Help"));
-    fileMenu->addAction(aboutAction);
+    fileMenu = menuBar()->addMenu(tr("&Help"));                       //Help menu
+    fileMenu->addAction(aboutAction);                                 //About item
 
+    // -Widgets and Layout
     mainWidget = new QWidget;
     textEdit = new QTextEdit;
     searchEdit = new QLineEdit;
@@ -68,18 +69,19 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     mainLayout->addWidget(textEdit, 1, 0, 1, 2);
     textEdit->setGeometry(QRect(0, 41, 376, 21));
     mainLayout->addWidget(addButton, 0,1,1,1);
-    //addButton->setObjectName(QString::fromUtf8("addButton"));
-    //addButton->setGeometry(QRect(378, 1, 21, 21));
     mainWidget->setLayout(mainLayout);
 
+    // -Animation and hotkey
     animation = new QPropertyAnimation(this, "geometry");
     shortcut = new QxtGlobalShortcut;
     connect(shortcut, SIGNAL(activated()), this, SLOT(anim()));
     shortcut->setShortcut(QKeySequence("Shift+F12"));
 
+    // Variable settings
     setWindowTitle(tr("Glidenote"));
     
-    animdur=250;
+    animdur=250;                                                      //Time in ms
+    winstatus=0;                                                      //Closed
 
     // Generate information on sizing based on the desktop size.
     heightratio=0.70;
@@ -89,19 +91,20 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     appheight=screenheight*(heightratio);
     appvpos=(screenheight*(1-heightratio))/2;
     appwidth=400;
-    apphpos=-400;
+    apphpos=-400;                                                     //Offscreen
     
-    // Output to console info about the sizing
-    // For debugging purposes
+    //Output to console info about the sizing
+    //For debugging purposes
     if(debugstatus==1){
         cout<<"Desktop: "<<screenwidth<<"x"<<screenheight<<endl;
         cout<<"App Height:"<<appheight<<"@"<<appvpos<<" per "<<heightratio<<endl;
         cout<<"App Width: "<<appwidth<<"@"<<apphpos<<endl;
     }
-    // Set the start position and size
-    this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));
+    
+    this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));     //Set the start position and size
 }
 
+//Opening of files
 void Glidenote::open()
 {
     cout<<"Open"<<endl;
@@ -120,6 +123,8 @@ void Glidenote::open()
     }
 }
 
+
+//Saving files
 void Glidenote::save()
 {
     cout<<"save"<<endl;
@@ -139,39 +144,36 @@ void Glidenote::save()
     }
 }
 
+//Animation for opening and closing
 void Glidenote::anim()
 {
     if(winstatus==1){
         animation->setDuration(animdur);
         animation->setStartValue(QRect(0,appvpos,400,appheight));
         animation->setEndValue(QRect(-500,appvpos,400,appheight));
-        animation->start();
-        winstatus=0;
-        if(debugstatus==1){
+        animation->start();                                           //Begin animation
+        winstatus=0;                                                  //Toggle status for next check
+        if(debugstatus==1){                                           //Debug output
             cout<<timestamp()<<" - Closed window."<<endl;
         }
         delay(animdur);
-        this->hide();
+        this->hide();                                                 //Hide the Window
     }else if(winstatus==0){
-        this->show();
+        this->show();                                                 //Make the window appear
         animation->setDuration(animdur);
         animation->setStartValue(QRect(-500,appvpos,400,appheight));
         animation->setEndValue(QRect(0,appvpos,400,appheight));
-        animation->start();
+        animation->start();                                           //Begin animation
         winstatus=1;
-        if(debugstatus==1){
-
+        if(debugstatus==1){                                           //Debugging
             cout<<timestamp()<<" - Opened window."<<endl;
         }
     }
-    /*animation->setDuration(500);
-    animation->setStartValue(QRect(-300,100,400,300));
-    animation->setEndValue(QRect(0,100,400,300));
-    animation->start();*/
 }
 
+//Code for showing an about screen
 void Glidenote::about(){
-    
+    //Code to be added
 }
 
 int main(int argc, char **argv)
@@ -179,27 +181,27 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     // Check for debug status
-    for (int i = 1; i < argc; i++){
-        if (i + 1 >= argc){
-            if(argc>2){
+    for (int i = 1; i < argc; i++){                                   //Loop through number of arguments
+        if (i + 1 >= argc){                                           //If you're at the end of the loop 
+            if(argc>2){                                               //Plural or singular check
                 cout<<"Arguments passed: "<<argv[i]<<endl;
             } else {
                 cout<<"Argument passed: "<<argv[i]<<endl;
             }
             
-            if (strcmp(argv[i], "-D")==0) {
-                debugstatus=1;
-                cout<<"Debugging mode active."<<endl;
+            if (strcmp(argv[i], "-D")==0) {                           //Check for the debug flag
+                debugstatus=1;                                        //Set debugging on
+                cout<<"Debugging mode active."<<endl;                 //report to console
             } else {
-                debugstatus=0;
+                debugstatus=0;                                        //If no debug flag, disable
             }
         }
     }
 
-    Glidenote glidenote;
-    //glidenote.show();
-
-    return app.exec();
+    Glidenote glidenote;                                              //Declaration for using all the goodies
+    //glidenote.show();                                               //Only used here if you want the window
+                                                                      //to be shown at start
+    return app.exec();                                                //Return status
 }
 
 #include "main.moc"

@@ -8,6 +8,7 @@
 using namespace std;
 
 bool debugstatus;
+bool linewrap;
 
 //Allows for timestamping debug output
 char* timestamp(){
@@ -101,6 +102,10 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
         cout<<"App Width: "<<appwidth<<"@"<<apphpos<<endl;
     }
     
+    if(linewrap==1){
+        textEdit->setLineWrapMode(QTextEdit::NoWrap);
+    }
+
     this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));     //Set the start position and size
 }
 
@@ -109,7 +114,7 @@ void Glidenote::open()
 {
     cout<<"Open"<<endl;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
-        tr("Text Files (*.txt);;C++ Files (*.cpp *.h)"));
+        tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
 
     if (fileName != "") {
         QFile file(fileName);
@@ -129,7 +134,7 @@ void Glidenote::save()
 {
     cout<<"save"<<endl;
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
-        tr("Text Files (*.txt);;C++ Files (*.cpp *.h)"));
+        tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
 
     if (fileName != "") {
         QFile file(fileName);
@@ -192,6 +197,8 @@ int main(int argc, char **argv)
             if (strcmp(argv[i], "-D")==0) {                           //Check for the debug flag
                 debugstatus=1;                                        //Set debugging on
                 cout<<"Debugging mode active."<<endl;                 //report to console
+            } else if (strcmp(argv[i], "-w")==0) {
+                linewrap=1;
             } else {
                 debugstatus=0;                                        //If no debug flag, disable
             }

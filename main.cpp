@@ -73,6 +73,7 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     textEdit->setGeometry(QRect(0, 41, 376, 21));
     mainLayout->addWidget(addButton, 0,1,1,1);
     mainWidget->setLayout(mainLayout);
+    addButton->setText(QApplication::translate("Widget", "+", 0, QApplication::UnicodeUTF8));
 
     // -Animation and hotkey
     animation = new QPropertyAnimation(this, "geometry");
@@ -134,6 +135,7 @@ void Glidenote::open(){
         }
         QTextStream in(&file);
         textEdit->setText(in.readAll());
+        searchEdit->setText(fileName);
         file.close();
     }
 }
@@ -147,6 +149,7 @@ void Glidenote::open(QString fileName){                               //Open Fil
         }
         QTextStream in(&file);
         textEdit->setText(in.readAll());
+        searchEdit->setText(fileName);
         file.close();
     }
 }

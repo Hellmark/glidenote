@@ -10,6 +10,9 @@ using namespace std;
 bool debugstatus;
 bool linewrap;
 int windir=0;
+bool openfile;
+QString openthis;
+
 
 //Allows for timestamping debug output
 char* timestamp(){
@@ -101,6 +104,11 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     }
 
     //this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));     //Set the start position and size
+    if(openfile==1){                                                  //Opens file if passed in argument
+        //cout<<openthis.toStdString()<<endl;
+        open(openthis);
+        openfile=0;
+    }
 }
 
 void Glidenote::scale(){
@@ -114,7 +122,7 @@ void Glidenote::scale(){
 
 //Opening of files
 void Glidenote::open(){
-    cout<<"Open"<<endl;
+    if(debugstatus==1){cout<<"Open"<<endl;}                            //Debug output
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
         tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
 
@@ -129,11 +137,23 @@ void Glidenote::open(){
         file.close();
     }
 }
-
+void Glidenote::open(QString fileName){
+    if(debugstatus==1){cout<<"Open "<<fileName.toStdString()<<endl;}                            //Debug output
+    if (fileName != "") {
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly)) {
+            QMessageBox::critical(this, tr("Error"), tr("Could not open file"));
+            return;
+        }
+        QTextStream in(&file);
+        textEdit->setText(in.readAll());
+        file.close();
+    }
+}
 
 //Saving files
 void Glidenote::save(){
-    cout<<"save"<<endl;
+    if(debugstatus==1){cout<<"Save"<<endl;}                            //Debug output
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
         tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
 
@@ -247,6 +267,7 @@ void Glidenote::about(){
 
 int main(int argc, char **argv){
     QApplication app(argc, argv);
+    //QString openthis;
 
     // Check arguments
     if (argc!=1){
@@ -276,11 +297,18 @@ int main(int argc, char **argv){
             } else if (strcmp(argv[i], "-r")==0){
                 windir=4;
             } else if (strcmp(argv[i], "-h")==0 || strcmp(argv[i], "--help")==0){
-                cout<<"Glidenote by Keith \"Hellmark\" Brown"<<endl<<endl<<"-D    Debug"<<endl;
-                cout<<"-w    Disable Linewrap"<<endl<<"-t    Located at top of screen"<<endl;
-                cout<<"-b    Located at bottom of screen"<<endl<<"-l    Located on left side of screen"<<endl;
-                cout<<"-r    Located on right side of screen"<<endl<<endl;
+                cout<<"Glidenote by Keith \"Hellmark\" Brown"<<endl<<endl;
+                cout<<"-f <file>    Opens the given file."<<endl;
+                cout<<"-D           Debug"<<endl;
+                cout<<"-w           Disable Linewrap"<<endl;
+                cout<<"-t           Located at top of screen"<<endl;
+                cout<<"-b           Located at bottom of screen"<<endl;
+                cout<<"-l           Located on left side of screen"<<endl;
+                cout<<"-r           Located on right side of screen"<<endl<<endl;
                 exit(0);
+            } else if (strcmp(argv[i], "-f")==0){
+                openthis=argv[i+1];
+                openfile=1;
             } else if (strcmp(argv[i], "-D")==1){
                 debugstatus=0;                                        //If no debug flag, disable
             }
@@ -299,5 +327,3 @@ int main(int argc, char **argv){
 }
 
 #include "main.moc"
-
-

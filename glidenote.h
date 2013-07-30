@@ -19,6 +19,7 @@ private slots:
     void anim();
     void about();
     void scale();
+    void open(QString);
 
 private:
     QWidget   *mainWidget;

@@ -22,15 +22,13 @@ char* timestamp(){
 }
 
 //Allows for pausing code, so animations are given time to complete
-void delay(int timedur)
-{
+void delay(int timedur){
     QTime dieTime= QTime::currentTime().addMSecs(timedur);
     while( QTime::currentTime() < dieTime )
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);    
 }
 
-Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
-{
+Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint){
     // Declarations    
     openAction = new QAction(tr("&Load"), this);
     saveAction = new QAction(tr("&Save"), this);
@@ -84,16 +82,8 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     animdur=250;                                                      //Time in ms
     winstatus=0;                                                      //Closed
 
-    // Generate information on sizing based on the desktop size.
-    heightratio=0.70;
-    QDesktopWidget* desktop = QApplication::desktop();
-    screenwidth=desktop->frameGeometry().width();
-    screenheight=desktop->frameGeometry().height();
-    appheight=screenheight*(heightratio);
-    appvpos=(screenheight*(1-heightratio))/2;
-    appwidth=400;
-    apphpos=-400;                                                     //Offscreen
-    
+    scale();
+
     //Output to console info about the sizing
     //For debugging purposes
     if(debugstatus==1){
@@ -109,9 +99,20 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));     //Set the start position and size
 }
 
+void Glidenote::scale(){
+    // Generate information on sizing based on the desktop size.
+    heightratio=0.70;
+    QDesktopWidget* desktop = QApplication::desktop();
+    screenwidth=desktop->frameGeometry().width();
+    screenheight=desktop->frameGeometry().height();
+    appheight=screenheight*(heightratio);
+    appvpos=(screenheight*(1-heightratio))/2;
+    appwidth=400;
+    apphpos=-400;                                                     //Offscreen
+}
+
 //Opening of files
-void Glidenote::open()
-{
+void Glidenote::open(){
     cout<<"Open"<<endl;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
         tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
@@ -130,8 +131,7 @@ void Glidenote::open()
 
 
 //Saving files
-void Glidenote::save()
-{
+void Glidenote::save(){
     cout<<"save"<<endl;
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
         tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
@@ -150,12 +150,12 @@ void Glidenote::save()
 }
 
 //Animation for opening and closing
-void Glidenote::anim()
-{
+void Glidenote::anim(){
+    scale();
     if(winstatus==1){
         animation->setDuration(animdur);
         animation->setStartValue(QRect(0,appvpos,400,appheight));
-        animation->setEndValue(QRect(-500,appvpos,400,appheight));
+        animation->setEndValue(QRect(-appwidth,appvpos,400,appheight));
         animation->start();                                           //Begin animation
         winstatus=0;                                                  //Toggle status for next check
         if(debugstatus==1){                                           //Debug output
@@ -166,7 +166,7 @@ void Glidenote::anim()
     }else if(winstatus==0){
         this->show();                                                 //Make the window appear
         animation->setDuration(animdur);
-        animation->setStartValue(QRect(-500,appvpos,400,appheight));
+        animation->setStartValue(QRect(-appwidth,appvpos,400,appheight));
         animation->setEndValue(QRect(0,appvpos,400,appheight));
         animation->start();                                           //Begin animation
         winstatus=1;
@@ -181,8 +181,7 @@ void Glidenote::about(){
     //Code to be added
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
     QApplication app(argc, argv);
 
     // Check for debug status

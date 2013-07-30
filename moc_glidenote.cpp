@@ -22,7 +22,7 @@ static const uint qt_meta_data_Glidenote[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,12 +34,14 @@ static const uint qt_meta_data_Glidenote[] = {
       18,   10,   10,   10, 0x08,
       25,   10,   10,   10, 0x08,
       32,   10,   10,   10, 0x08,
+      40,   10,   10,   10, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Glidenote[] = {
     "Glidenote\0\0open()\0save()\0anim()\0about()\0"
+    "scale()\0"
 };
 
 void Glidenote::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -52,6 +54,7 @@ void Glidenote::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 1: _t->save(); break;
         case 2: _t->anim(); break;
         case 3: _t->about(); break;
+        case 4: _t->scale(); break;
         default: ;
         }
     }
@@ -90,9 +93,9 @@ int Glidenote::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

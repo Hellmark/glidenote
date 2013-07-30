@@ -258,8 +258,9 @@ int main(int argc, char **argv){
         for (int x = 1; x < argc;x++){                                //Output the arguments
             cout<<argv[x]<<" ";
         }
+        cout<<endl;
     }
-    cout<<endl;
+
     for (int i = 1; i < argc; i++){                                   //Loop through number of arguments
             if (strcmp(argv[i], "-D")==0) {                           //Check for the debug flag
                 debugstatus=1;                                        //Set debugging on
@@ -274,14 +275,23 @@ int main(int argc, char **argv){
                 windir=3;
             } else if (strcmp(argv[i], "-r")==0){
                 windir=4;
+            } else if (strcmp(argv[i], "-h")==0 || strcmp(argv[i], "--help")==0){
+                cout<<"Glidenote by Keith \"Hellmark\" Brown"<<endl<<endl<<"-D    Debug"<<endl;
+                cout<<"-w    Disable Linewrap"<<endl<<"-t    Located at top of screen"<<endl;
+                cout<<"-b    Located at bottom of screen"<<endl<<"-l    Located on left side of screen"<<endl;
+                cout<<"-r    Located on right side of screen"<<endl<<endl;
+                exit(0);
             } else if (strcmp(argv[i], "-D")==1){
                 debugstatus=0;                                        //If no debug flag, disable
             }
     }
     if(debugstatus==1){
-        cout<<"Direction: "<<windir<<endl;
+        cout<<"Location: ";
+        if(windir==1){cout<<"top"<<endl;}
+        if(windir==2){cout<<"bottom"<<endl;}
+        if(windir==3){cout<<"left"<<endl;}
+        if(windir==4){cout<<"right"<<endl;}
     }
-    //cout<<windir<<endl;
     Glidenote glidenote;                                              //Declaration for using all the goodies
     //glidenote.show();                                               //Only used here if you want the window
                                                                       //to be shown at start

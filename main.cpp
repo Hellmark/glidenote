@@ -9,6 +9,7 @@ using namespace std;
 
 bool debugstatus;
 bool linewrap;
+int windir=0;
 
 //Allows for timestamping debug output
 char* timestamp(){
@@ -81,6 +82,9 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
     
     animdur=250;                                                      //Time in ms
     winstatus=0;                                                      //Closed
+    if(windir==0){
+        windir=4;                                                     //Spectacles, testacles, wallet, watch
+    }
 
     scale();
 
@@ -96,7 +100,7 @@ Glidenote::Glidenote() : QMainWindow(NULL, Qt::FramelessWindowHint | Qt::WindowS
         textEdit->setLineWrapMode(QTextEdit::NoWrap);
     }
 
-    this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));     //Set the start position and size
+    //this->setGeometry(QRect(apphpos,appvpos,appwidth,appheight));     //Set the start position and size
 }
 
 void Glidenote::scale(){
@@ -105,10 +109,7 @@ void Glidenote::scale(){
     QDesktopWidget* desktop = QApplication::desktop();
     screenwidth=desktop->frameGeometry().width();
     screenheight=desktop->frameGeometry().height();
-    appheight=screenheight*(heightratio);
-    appvpos=(screenheight*(1-heightratio))/2;
-    appwidth=400;
-    apphpos=-400;                                                     //Offscreen
+    //apphpos=-400;                                                     //Offscreen
 }
 
 //Opening of files
@@ -153,9 +154,40 @@ void Glidenote::save(){
 void Glidenote::anim(){
     scale();
     if(winstatus==1){
+        if(windir==1){
+            appwidth=screenwidth*heightratio;
+            appheight=400;
+            starthpos=(screenwidth-appwidth)/2;
+            endhpos=starthpos;
+            startvpos=0;
+            endvpos=0-appheight;
+        } else if(windir==2){
+            appwidth=screenwidth*heightratio;
+            appheight=400;
+            starthpos=(screenwidth-appwidth)/2;
+            endhpos=starthpos;
+            startvpos=screenheight-appheight;
+            endvpos=screenheight+appheight;
+        } else if(windir==3){
+            appheight=screenheight*(heightratio);
+            appvpos=(screenheight*(1-heightratio))/2;
+            appwidth=400;
+            startvpos=appvpos;
+            endvpos=appvpos;
+            starthpos=0;
+            endhpos=0-appwidth;
+        } else if(windir==4){
+            appheight=screenheight*(heightratio);
+            appvpos=(screenheight*(1-heightratio))/2;
+            appwidth=400;
+            startvpos=appvpos;
+            endvpos=appvpos;
+            starthpos=screenwidth-appwidth;
+            endhpos=screenwidth+appwidth;
+        }
         animation->setDuration(animdur);
-        animation->setStartValue(QRect(0,appvpos,400,appheight));
-        animation->setEndValue(QRect(-appwidth,appvpos,400,appheight));
+        animation->setStartValue(QRect(starthpos,startvpos,appwidth,appheight));
+        animation->setEndValue(QRect(endhpos,endvpos,appwidth,appheight));
         animation->start();                                           //Begin animation
         winstatus=0;                                                  //Toggle status for next check
         if(debugstatus==1){                                           //Debug output
@@ -164,10 +196,42 @@ void Glidenote::anim(){
         delay(animdur);
         this->hide();                                                 //Hide the Window
     }else if(winstatus==0){
+        if(windir==1){
+            appwidth=screenwidth*heightratio;
+            appheight=400;
+            starthpos=(screenwidth-appwidth)/2;
+            endhpos=starthpos;
+            startvpos=0-appheight;
+            endvpos=0;
+        } else if(windir==2){
+            appwidth=screenwidth*heightratio;
+            appheight=400;
+            starthpos=(screenwidth-appwidth)/2;
+            endhpos=starthpos;
+            startvpos=screenheight+appheight;
+            endvpos=screenheight-appheight;
+        } else if(windir==3){
+            appheight=screenheight*(heightratio);
+            appvpos=(screenheight*(1-heightratio))/2;
+            appwidth=400;
+            startvpos=appvpos;
+            endvpos=appvpos;
+            starthpos=0-appwidth;
+            endhpos=0;
+        } else if(windir==4){
+            appheight=screenheight*(heightratio);
+            appvpos=(screenheight*(1-heightratio))/2;
+            appwidth=400;
+            startvpos=appvpos;
+            endvpos=appvpos;
+            starthpos=screenwidth+appwidth;
+            endhpos=screenwidth-appwidth;
+        }
+        this->setGeometry(QRect(starthpos,endvpos,appwidth,appheight));
         this->show();                                                 //Make the window appear
         animation->setDuration(animdur);
-        animation->setStartValue(QRect(-appwidth,appvpos,400,appheight));
-        animation->setEndValue(QRect(0,appvpos,400,appheight));
+        animation->setStartValue(QRect(starthpos,endvpos,appwidth,appheight));
+        animation->setEndValue(QRect(endhpos,endvpos,appwidth,appheight));
         animation->start();                                           //Begin animation
         winstatus=1;
         if(debugstatus==1){                                           //Debugging
@@ -184,26 +248,40 @@ void Glidenote::about(){
 int main(int argc, char **argv){
     QApplication app(argc, argv);
 
-    // Check for debug status
+    // Check arguments
+    if (argc!=1){
+        if(argc>2){                                                   //Plural or singular check
+            cout<<"Arguments passed: ";
+        } else if(argc==2) {
+            cout<<"Argument passed: ";
+        }
+        for (int x = 1; x < argc;x++){                                //Output the arguments
+            cout<<argv[x]<<" ";
+        }
+    }
+    cout<<endl;
     for (int i = 1; i < argc; i++){                                   //Loop through number of arguments
-        if (i + 1 >= argc){                                           //If you're at the end of the loop 
-            if(argc>2){                                               //Plural or singular check
-                cout<<"Arguments passed: "<<argv[i]<<endl;
-            } else {
-                cout<<"Argument passed: "<<argv[i]<<endl;
-            }
-            
             if (strcmp(argv[i], "-D")==0) {                           //Check for the debug flag
                 debugstatus=1;                                        //Set debugging on
                 cout<<"Debugging mode active."<<endl;                 //report to console
             } else if (strcmp(argv[i], "-w")==0) {
                 linewrap=1;
-            } else {
+            } else if (strcmp(argv[i], "-t")==0){
+                windir=1;
+            } else if (strcmp(argv[i], "-b")==0){
+                windir=2;
+            } else if (strcmp(argv[i], "-l")==0){
+                windir=3;
+            } else if (strcmp(argv[i], "-r")==0){
+                windir=4;
+            } else if (strcmp(argv[i], "-D")==1){
                 debugstatus=0;                                        //If no debug flag, disable
             }
-        }
     }
-
+    if(debugstatus==1){
+        cout<<"Direction: "<<windir<<endl;
+    }
+    //cout<<windir<<endl;
     Glidenote glidenote;                                              //Declaration for using all the goodies
     //glidenote.show();                                               //Only used here if you want the window
                                                                       //to be shown at start

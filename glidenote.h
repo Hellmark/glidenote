@@ -13,7 +13,6 @@ class Glidenote : public QMainWindow
 public:
     Glidenote();
 
-
 private slots:
     void open();
     void save();
@@ -47,6 +46,10 @@ private:
     int appvpos;
     int apphpos;
     int animdur;
+    int starthpos;
+    int endhpos;
+    int startvpos;
+    int endvpos;
     QStringList *arguments;
 };
 #endif // GLIDENOTE_H

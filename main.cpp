@@ -137,8 +137,8 @@ void Glidenote::open(){
         file.close();
     }
 }
-void Glidenote::open(QString fileName){
-    if(debugstatus==1){cout<<"Open "<<fileName.toStdString()<<endl;}                            //Debug output
+void Glidenote::open(QString fileName){                               //Open File if from CLI argument
+    if(debugstatus==1){cout<<"Open "<<fileName.toStdString()<<endl;}  //Debug output
     if (fileName != "") {
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly)) {
@@ -173,22 +173,22 @@ void Glidenote::save(){
 //Animation for opening and closing
 void Glidenote::anim(){
     scale();
-    if(winstatus==1){
-        if(windir==1){
+    if(winstatus==1){                                                 //Hide
+        if(windir==1){                                                //Top
             appwidth=screenwidth*heightratio;
             appheight=400;
             starthpos=(screenwidth-appwidth)/2;
             endhpos=starthpos;
             startvpos=0;
             endvpos=0-appheight;
-        } else if(windir==2){
+        } else if(windir==2){                                         //Bottom
             appwidth=screenwidth*heightratio;
             appheight=400;
             starthpos=(screenwidth-appwidth)/2;
             endhpos=starthpos;
             startvpos=screenheight-appheight;
             endvpos=screenheight+appheight;
-        } else if(windir==3){
+        } else if(windir==3){                                         //Left
             appheight=screenheight*(heightratio);
             appvpos=(screenheight*(1-heightratio))/2;
             appwidth=400;
@@ -196,7 +196,7 @@ void Glidenote::anim(){
             endvpos=appvpos;
             starthpos=0;
             endhpos=0-appwidth;
-        } else if(windir==4){
+        } else if(windir==4){                                         //Right
             appheight=screenheight*(heightratio);
             appvpos=(screenheight*(1-heightratio))/2;
             appwidth=400;
@@ -215,22 +215,22 @@ void Glidenote::anim(){
         }
         delay(animdur);
         this->hide();                                                 //Hide the Window
-    }else if(winstatus==0){
-        if(windir==1){
+    }else if(winstatus==0){                                           //Show
+        if(windir==1){                                                //Top
             appwidth=screenwidth*heightratio;
             appheight=400;
             starthpos=(screenwidth-appwidth)/2;
             endhpos=starthpos;
             startvpos=0-appheight;
             endvpos=0;
-        } else if(windir==2){
+        } else if(windir==2){                                         //Bottom
             appwidth=screenwidth*heightratio;
             appheight=400;
             starthpos=(screenwidth-appwidth)/2;
             endhpos=starthpos;
             startvpos=screenheight+appheight;
             endvpos=screenheight-appheight;
-        } else if(windir==3){
+        } else if(windir==3){                                         //Left
             appheight=screenheight*(heightratio);
             appvpos=(screenheight*(1-heightratio))/2;
             appwidth=400;
@@ -238,7 +238,7 @@ void Glidenote::anim(){
             endvpos=appvpos;
             starthpos=0-appwidth;
             endhpos=0;
-        } else if(windir==4){
+        } else if(windir==4){                                         //Right
             appheight=screenheight*(heightratio);
             appvpos=(screenheight*(1-heightratio))/2;
             appwidth=400;
@@ -267,7 +267,6 @@ void Glidenote::about(){
 
 int main(int argc, char **argv){
     QApplication app(argc, argv);
-    //QString openthis;
 
     // Check arguments
     if (argc!=1){
@@ -286,15 +285,15 @@ int main(int argc, char **argv){
             if (strcmp(argv[i], "-D")==0) {                           //Check for the debug flag
                 debugstatus=1;                                        //Set debugging on
                 cout<<"Debugging mode active."<<endl;                 //report to console
-            } else if (strcmp(argv[i], "-w")==0) {
+            } else if (strcmp(argv[i], "-w")==0) {                    //No Linewrap
                 linewrap=1;
-            } else if (strcmp(argv[i], "-t")==0){
+            } else if (strcmp(argv[i], "-t")==0){                     //Top
                 windir=1;
-            } else if (strcmp(argv[i], "-b")==0){
+            } else if (strcmp(argv[i], "-b")==0){                     //Bottom
                 windir=2;
-            } else if (strcmp(argv[i], "-l")==0){
+            } else if (strcmp(argv[i], "-l")==0){                     //Left
                 windir=3;
-            } else if (strcmp(argv[i], "-r")==0){
+            } else if (strcmp(argv[i], "-r")==0){                     //Right
                 windir=4;
             } else if (strcmp(argv[i], "-h")==0 || strcmp(argv[i], "--help")==0){
                 cout<<"Glidenote by Keith \"Hellmark\" Brown"<<endl<<endl;
@@ -306,7 +305,7 @@ int main(int argc, char **argv){
                 cout<<"-l           Located on left side of screen"<<endl;
                 cout<<"-r           Located on right side of screen"<<endl<<endl;
                 exit(0);
-            } else if (strcmp(argv[i], "-f")==0){
+            } else if (strcmp(argv[i], "-f")==0){                     //File open
                 openthis=argv[i+1];
                 openfile=1;
             } else if (strcmp(argv[i], "-D")==1){

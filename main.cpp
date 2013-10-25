@@ -155,7 +155,7 @@ void Glidenote::open(QString fileName){                               //Open Fil
 }
 
 //Saving files
-void Glidenote::save(){
+void Glidenote::save(){												   //Save As
     if(debugstatus==1){cout<<"Save"<<endl;}                            //Debug output
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
         tr("Text Files (*.txt);;C++ Files (*.cpp *.h);;Shell Scripts (*.sh *.bat *.com);;Web Files (*.html *.htm *.css *.php *.asp *.js);;All Files (*.*)"));
@@ -165,11 +165,29 @@ void Glidenote::save(){
         if (!file.open(QIODevice::WriteOnly)) {
             // error message
         } else {
+			if(debugstatus==1){                                       //Additional debug output
+				cout<<"Saved as "<<fileName.toStdString()<<endl;
+			}
             QTextStream stream(&file);
             stream << textEdit->toPlainText();
             stream.flush();
             file.close();
         }
+    }
+}
+void Glidenote::save(QString fileName){                               //Save File using specified name
+    if(debugstatus==1){cout<<"Save "<<fileName.toStdString()<<endl;}  //Debug output
+    if (fileName != "") {
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly)) {
+            QMessageBox::critical(this, tr("Error"), tr("Could not open file"));
+            return;
+        }
+        QTextStream stream(&file);
+        stream << textEdit->toPlainText();
+        //searchEdit->setText(fileName);
+        stream.flush();
+        file.close();
     }
 }
 

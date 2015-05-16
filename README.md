@@ -20,7 +20,7 @@ If you have an recommendations for library additions or replacements, please sub
 ## Details
 At this point the build process should consist of 3 commands
 
-* qmake --project
+* qmake -project
 * qmake
 * make
 

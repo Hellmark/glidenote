@@ -1,0 +1,5 @@
+Based on the premise of Pierre Châtel's [sidenote](http://www.chatelp.org/resources/sidenote.dmg) application for Mac OS X 10.6 and older, this has a quick notepad slide in from off the screen when needed, and disappear when not.
+
+This has been made with QT, & LibQxT, and coded in C++. The idea is to have a cross platform app, so users can have the same workflow, even if they hop between systems.
+
+I would like to thank [Pierre Châtel](http://www.chatelp.org/) for developing the original sidenote, as well as [Laurent Baumann](http://lbaumann.com/) for the design. Also, without the Qt Project, and the guys at #qt, I'd have probably given up again on ever having something like this in my life again. Also, I'd like to thank [simplenote](http://simplenote.com/) and [Notational Velocity](http://notational.net/) for making me remember how handy a good note taking app could be, and getting me back on the path for doing this, after a few failed attempts in RealBASIC/Mojo and other languages.

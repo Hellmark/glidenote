@@ -9,7 +9,7 @@ I would like to thank Pierre Châtel for developing the original sidenote, as we
 
 # Build requirements and procedure
 
-Introduction
+## Introduction
 
 At the current time, it is required to have QT 4.8.5 or newer. Will also build and work with QT 5.1. Also required is LibQxT 0.6, for the GlobalShortcut? that operates the code for the hotkey. These should already be available for most Linux distributions. QT has packages for various systems at http://qt-project.org/downloads/. LibQxT's source is available from http://libqxt.org.
 
@@ -17,30 +17,31 @@ I do have to note that LibQxT is difficult to build on some systems, and making 
 
 If you have an recommendations for library additions or replacements, please submit your thoughts on the matter. I am not married to anything, provided it doesn't require a complete rebuild from scratch.
 
-Details
+## Details
 At this point the build process should consist of 3 commands
 
 qmake --project
 qmake
 make
 
-Introduction
+# To Do
 This is basically a list of things I have planned for eventually doing, in no particular order.
 
-Details
-Allow syncing with Simplenote.
+~~Allow syncing with Simplenote.~~
 Icons.
 About screen.
 Migrate to a toolbar instead of file menu, so is more crossplatform friendly.
 Build packages for i386/x86_64 debian, Mac OS X, and Windows.
 Configuration options page.
-Allow docking to different areas of the screen.
+~~Allow docking to different areas of the screen.~~
 Options for adjusting the window size (use percentage based).
 Options for setting the hotkey.
-Allowing the markup that Simplenote allows.
-Making linewrap optional.
-Break out the scaling code into a separate function, so it could be called each time the window is made to appear (may potentially cause fewer glitches when shifting screen resolutions, and thus could in theory allow it to be used for games.
-Maybe
+~~Allowing the markup that Simplenote allows.~~
+~~Making linewrap optional.~~
+~~Break out the scaling code into a separate function, so it could be called each time the window is made to appear (may potentially cause fewer glitches when shifting screen resolutions, and thus could in theory allow it to be used for games.~~
+
+
+## Maybe
 These are items that may or may not be implemented, depending on interest, time, and difficulty.
 
 Mouseover hotzone for triggering.

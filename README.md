@@ -20,9 +20,9 @@ If you have an recommendations for library additions or replacements, please sub
 ## Details
 At this point the build process should consist of 3 commands
 
-qmake --project
-qmake
-make
+* qmake --project
+* qmake
+* make
 
 # To Do
 This is basically a list of things I have planned for eventually doing, in no particular order.

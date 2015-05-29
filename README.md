@@ -39,7 +39,7 @@ This is basically a list of things I have planned for eventually doing, in no pa
 * ~~Allowing the markup that Simplenote allows.~~
 * ~~Making linewrap optional.~~
 * ~~Break out the scaling code into a separate function, so it could be called each time the window is made to appear (may potentially cause fewer glitches when shifting screen resolutions, and thus could in theory allow it to be used for games.~~
-
+* Restrict to single instance
 
 ## Maybe
 These are items that may or may not be implemented, depending on interest, time, and difficulty.
